@@ -9,6 +9,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>ip-filter-core</module>
+        <module>ip-filter-conf-parser</module>
     </modules>
 
     <packaging>pom</packaging>
