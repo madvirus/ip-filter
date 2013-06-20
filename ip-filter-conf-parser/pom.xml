@@ -10,9 +10,6 @@
     <name>${project.artifactId}</name>
 
     <properties>
-        <maven.compiler.source>1.6</maven.compiler.source>
-        <maven.compiler.target>1.6</maven.compiler.target>
-        <encoding>UTF-8</encoding>
         <scala.tools.version>2.10</scala.tools.version>
         <scala.version>2.10.0</scala.version>
     </properties>
@@ -21,7 +18,6 @@
         <dependency>
             <groupId>org.chimi.ipfilter</groupId>
             <artifactId>ip-filter-core</artifactId>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.scala-lang</groupId>
@@ -30,12 +26,6 @@
         </dependency>
 
         <!-- Test -->
-        <dependency>
-            <groupId>org.specs2</groupId>
-            <artifactId>specs2_${scala.tools.version}</artifactId>
-            <version>1.13</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.scalatest</groupId>
             <artifactId>scalatest_${scala.tools.version}</artifactId>
