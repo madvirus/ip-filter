@@ -5,7 +5,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class IpFilterTest {
+public class ConfigIpFilterTest {
     @Test
     public void shouldReturnTrueToAllowedIpAndReturnFalseToDeniedIp() {
         Config config = new Config();
@@ -17,7 +17,7 @@ public class IpFilterTest {
         config.deny("5.6.7.8");
         config.deny("101.102.103.32/27"); // 001xxxxx 범위: 32~63")
 
-        IpFilter ipFilter = new IpFilter(config);
+        IpFilter ipFilter = new ConfigIpFilter(config);
         assertTrue(ipFilter.accept("1.2.3.4"));
         assertTrue(ipFilter.accept("1.2.3.5"));
         assertTrue(ipFilter.accept("1.2.3.64"));
@@ -31,7 +31,7 @@ public class IpFilterTest {
         config.setAllowFirst(true);
         config.allow("1.2.3.4");
         config.deny("1.2.3.4");
-        IpFilter ipFilter = new IpFilter(config);
+        IpFilter ipFilter = new ConfigIpFilter(config);
         assertTrue(ipFilter.accept("1.2.3.4"));
     }
 
@@ -41,7 +41,7 @@ public class IpFilterTest {
         config.setAllowFirst(false);
         config.allow("1.2.3.4");
         config.deny("1.2.3.4");
-        IpFilter ipFilter = new IpFilter(config);
+        IpFilter ipFilter = new ConfigIpFilter(config);
         assertFalse(ipFilter.accept("1.2.3.4"));
     }
 }
