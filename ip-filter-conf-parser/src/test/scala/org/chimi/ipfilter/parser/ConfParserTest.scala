@@ -1,14 +1,11 @@
 package org.chimi.ipfilter.parser
 
-import scala.util.parsing.combinator.JavaTokenParsers
-import org.junit.Test
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSuite
-import org.scalatest.matchers.ShouldMatchers
 
 @RunWith(classOf[JUnitRunner])
-class ConfParserTest extends FunSuite with ShouldMatchers {
+class ConfParserTest extends FunSuite {
 
   test("ConfParser should parse valid conf text") {
     val confValue =
@@ -18,7 +15,7 @@ class ConfParserTest extends FunSuite with ShouldMatchers {
         |allow from 101.102.103.*
         |allow from 201.202.203.10/64
       """.stripMargin
-    val conf = ConfParser.parse(confValue)
+    val conf = new ConfParser().parse(confValue)
 
     assert(!conf.isAllowFirst)
     assert(!conf.isDefaultAllow)
