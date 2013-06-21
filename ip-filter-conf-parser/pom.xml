@@ -8,6 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ip-filter-conf-parser</artifactId>
     <name>${project.artifactId}</name>
+    <packaging>jar</packaging>
 
     <properties>
         <scala.tools.version>2.10</scala.tools.version>
