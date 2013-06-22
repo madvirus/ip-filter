@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>org.chimi.ipfilter</groupId>
+  <artifactId>ip-filter-parent</artifactId>
+  <versioning>
+    <release>0.1</release>
+    <versions>
+      <version>0.1</version>
+    </versions>
+    <lastUpdated>20130622140316</lastUpdated>
+  </versioning>
+</metadata>
