@@ -3,7 +3,7 @@ IP-FILTER
 
 ## Overview
 
-Very simple module to allow/deny ip
+Very simple java based ip-filter module to allow/deny ip
 
 ## Module list
 
