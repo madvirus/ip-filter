@@ -9,5 +9,5 @@ public abstract class IpBlockerFactory {
         return new IpBlockerFactoryImpl();
     }
 
-    abstract public IpBlocker create(Map<String, String> config);
+    abstract public IpBlocker create(Map<String, String> config) throws IpBlockerCreationException;
 }

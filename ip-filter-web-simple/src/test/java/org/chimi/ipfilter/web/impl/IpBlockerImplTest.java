@@ -1,6 +1,5 @@
 package org.chimi.ipfilter.web.impl;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -27,12 +26,24 @@ public class IpBlockerImplTest {
     }
 
     @Test
-    @Ignore
     public void configFile() {
         Map<String, String> config = new HashMap<String, String>();
         config.put("type", "file");
         config.put("value",
-                "src/test/resources/test.conf");
+                "ip-filter-web-simple/src/test/resources/test.conf");
+        IpBlockerImpl ipBlocker = new IpBlockerImpl();
+        ipBlocker.init(config);
+
+        assertTrue(ipBlocker.accept("1.2.3.4"));
+        assertFalse(ipBlocker.accept("1.2.3.5"));
+    }
+
+    @Test
+    public void configClasspath() {
+        Map<String, String> config = new HashMap<String, String>();
+        config.put("type", "classpath");
+        config.put("value",
+                "/test.conf");
         IpBlockerImpl ipBlocker = new IpBlockerImpl();
         ipBlocker.init(config);
 
