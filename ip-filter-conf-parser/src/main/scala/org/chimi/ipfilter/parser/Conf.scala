@@ -51,7 +51,6 @@ class Conf extends JavaTokenParsers {
 class ConfParser extends Conf {
   def parse(confText: String): Config = {
     val result = parseAll(conf, confText)
-    println(result)
     result.get
   }
 }
