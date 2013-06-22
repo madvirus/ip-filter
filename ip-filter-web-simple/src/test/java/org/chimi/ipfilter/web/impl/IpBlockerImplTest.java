@@ -12,14 +12,8 @@ public class IpBlockerImplTest {
 
     @Test
     public void configText() {
-        Map<String, String> config = new HashMap<String, String>();
-        config.put("type", "text");
-        config.put("value",
-                "order deny,allow\n" +
-                        "allow from 1.2.3.4\n" +
-                        "deny from 1.2.3.5");
         IpBlockerImpl ipBlocker = new IpBlockerImpl();
-        ipBlocker.init(config);
+        ipBlocker.init(ConfigMapUtil.getTextConfigMap());
 
         assertTrue(ipBlocker.accept("1.2.3.4"));
         assertFalse(ipBlocker.accept("1.2.3.5"));
