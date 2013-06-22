@@ -16,9 +16,8 @@ Very simple module to allow/deny ip
 
 ## Maven Configuration
 
-ip-simple module is provided 
 
-```
+```xml
     <repositories>
         <!-- repository for ip-filter module -->
         <repository>
@@ -87,7 +86,7 @@ If you set allowFirst property of Config object to true,
 then IpFilter check allowed ip.
 For example, in following code ipFilter.accept("1.2.3.4") returns true.
 
-```
+```java
 Config config = new Config();
 config.setAllowFirst(**true**);
 config.setDefaultAllow(false);
@@ -103,7 +102,7 @@ But, If allowFirst is false, config.accept("1.2.3.4") returns false because IpFi
 IpFilter's accept() method does not find matching allow/deny for ip,
 then accept() method returns defaultAllow.
 
-```
+```java
 Config config = new Config();
 config.setAllowFirst(true);
 config.setDefaultAllow(**false**);
@@ -141,9 +140,128 @@ String confValue =
 Config config = new ConfParser().parse(confValue);
 ```
 
-## ip-filter-web-api and ip-filter-web-simple
+## ip-filter-web-api
 
-### Usage
+ip-filter-web-api provides IpBlockFilter which is Servlet Filter for ip blocking.
+IpBlockFilter sends 404 error code if client ip is denied.
 
+### Usage ip-filter-web-simple module
 
+ip-filter-web-simple is implementation of ip-filter-web-api.
+This module use simple configuration.
 
+#### Maven Dependencies
+
+```xml
+    <repositories>
+        <!-- repository for ip-filter module -->
+        <repository>
+            <id>ip-filter-mvn-repo</id>
+            <url>https://raw.github.com/madvirus/ip-filter/mvn-repo/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.chimi.ipfilter</groupId>
+            <artifactId>ip-filter-web-api</artifactId>
+            <version>0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.chimi.ipfilter</groupId>
+            <artifactId>ip-filter-web-simple</artifactId>
+            <version>0.1</version>
+        </dependency>
+        ...
+```
+
+#### Configuration Option 1, input config string in web.xml
+
+web.xml:
+```xml
+    <filter>
+        <filter-name>ipBlockFilter</filter-name>
+        <filter-class>org.chimi.ipfilter.web.IpBlockFilter</filter-class>
+        <init-param>
+            <param-name>**type**</param-name>
+            <param-value>**text**</param-value>
+        </init-param>
+        <init-param>
+            <param-name>value</param-name>
+            <param-value>
+                order allow,deny
+                allow from 127.0.0.1
+                deny from all
+            </param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>ipBlockFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+```
+
+#### Configuration Option 2, use external config file
+
+web.xml:
+```xml
+    <filter>
+        <filter-name>ipBlockFilter</filter-name>
+        <filter-class>org.chimi.ipfilter.web.IpBlockFilter</filter-class>
+        <init-param>
+            <param-name>**type**</param-name>
+            <param-value>**file**</param-value>
+        </init-param>
+        <init-param>
+            <param-name>value</param-name>
+            <param-value>
+                c:\somepath\access.conf
+            </param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>ipBlockFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+```
+
+access.conf:
+```
+order allow,deny
+allow from 127.0.0.1
+deny from all
+```
+
+#### Configuration Option 3, use resource file in classpath
+
+```xml
+    <filter>
+        <filter-name>ipBlockFilter</filter-name>
+        <filter-class>org.chimi.ipfilter.web.IpBlockFilter</filter-class>
+        <init-param>
+            <param-name>**type**</param-name>
+            <param-value>**classpath**</param-value>
+        </init-param>
+        <init-param>
+            <param-name>value</param-name>
+            <param-value>
+                /org/chimi/config/access.conf
+            </param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>ipBlockFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+```
+
+### Provide custom ip-filter-web-api implementation
+
+TODO
