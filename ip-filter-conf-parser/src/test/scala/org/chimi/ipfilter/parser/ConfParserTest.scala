@@ -9,7 +9,9 @@ class ConfParserTest extends FunSuite {
 
   test("ConfParser should parse valid conf text") {
     val confValue =
-      """order deny,allow
+      """#comment
+        |#comment
+        |order deny,allow
         |allow from 1.2.3.4
         |deny from 10.20.30.40
         |allow from 101.102.103.*
