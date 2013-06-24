@@ -1,6 +1,7 @@
 package org.chimi.ipfilter.web;
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Enumeration;
@@ -9,10 +10,25 @@ import java.util.Map;
 
 public class IpBlockFilter implements Filter {
 
+    public static final String RELOAD_COMMAND_PARAM_NAME_CONFIG_NAME = "reloadCommandParamName";
+    public static final String DEFAULT_RELOAD_COMMAND_PARAM_NAME_VALUE = "RCPN";
+
     private IpBlocker ipBlocker;
+    private String reloadCommandParamName;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
+        initializeReloadCommandParamName(filterConfig);
+        createIpBlocker(filterConfig);
+    }
+
+    private void initializeReloadCommandParamName(FilterConfig filterConfig) {
+        reloadCommandParamName = filterConfig.getInitParameter(RELOAD_COMMAND_PARAM_NAME_CONFIG_NAME);
+        if (reloadCommandParamName == null)
+            reloadCommandParamName = DEFAULT_RELOAD_COMMAND_PARAM_NAME_VALUE;
+    }
+
+    private void createIpBlocker(FilterConfig filterConfig) {
         ipBlocker = IpBlockerFactory.getInstance().create(filterConfigToMap(filterConfig));
     }
 
@@ -30,9 +46,22 @@ public class IpBlockFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         if (ipBlocker.accept(request.getRemoteAddr()))
-            chain.doFilter(request, response);
+            if (checkReloadRequest((HttpServletRequest) request))
+                reloadAndResponse(request, response);
+            else
+                chain.doFilter(request, response);
         else
             ((HttpServletResponse) response).sendError(HttpServletResponse.SC_NOT_FOUND);
+    }
+
+    private boolean checkReloadRequest(HttpServletRequest request) {
+        String reloadCommand = request.getParameter(reloadCommandParamName);
+        if (reloadCommand == null) return false;
+        return reloadCommand.compareToIgnoreCase("true") == 0;
+    }
+
+    private void reloadAndResponse(ServletRequest request, ServletResponse response) {
+        ipBlocker.reload();
     }
 
     @Override

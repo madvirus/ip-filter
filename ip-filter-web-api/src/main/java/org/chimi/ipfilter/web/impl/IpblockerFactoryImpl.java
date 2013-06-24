@@ -8,6 +8,6 @@ import java.util.Map;
 public class IpBlockerFactoryImpl extends IpBlockerFactory {
     @Override
     public IpBlocker create(Map<String, String> config) {
-        throw new IllegalStateException("IpBlockerFactoryImpl must not be included in ip-filter-web-api.jar");
+        return new FakeIpBlocker();
     }
 }

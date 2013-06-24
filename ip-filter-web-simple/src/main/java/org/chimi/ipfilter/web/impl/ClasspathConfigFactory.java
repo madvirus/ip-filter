@@ -19,4 +19,9 @@ public class ClasspathConfigFactory extends ConfigFactory {
             throw new ConfigFactoryException(e);
         }
     }
+
+    @Override
+    public boolean isReloadSupported() {
+        return false;
+    }
 }

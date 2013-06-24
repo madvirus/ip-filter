@@ -8,4 +8,9 @@ public class TextConfigFactory extends ConfigFactory {
     public Config create(String value) {
         return new ConfParser().parse(value);
     }
+
+    @Override
+    public boolean isReloadSupported() {
+        return false;
+    }
 }

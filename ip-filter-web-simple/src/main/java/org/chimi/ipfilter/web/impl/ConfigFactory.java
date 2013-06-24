@@ -17,4 +17,6 @@ public abstract class ConfigFactory {
     }
 
     public abstract Config create(String value);
+
+    public abstract boolean isReloadSupported();
 }

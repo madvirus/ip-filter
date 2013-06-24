@@ -21,4 +21,9 @@ public class FileConfigFactory extends ConfigFactory {
         }
     }
 
+    @Override
+    public boolean isReloadSupported() {
+        return true;
+    }
+
 }
