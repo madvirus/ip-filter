@@ -11,16 +11,17 @@ class Conf extends JavaTokenParsers {
       val config = new Config
       x.foreach(part =>
         part match {
-        case ("order", firstAllow:Boolean) => config.setAllowFirst(firstAllow)
-        case ("allow", ip:String) => config.allow(ip)
-        case ("deny", ip:String) => config.deny(ip)
-        case _ =>
-      })
+          case ("order", firstAllow: Boolean) => config.setAllowFirst(firstAllow)
+          case ("default", defaultAllow: Boolean) => config.setDefaultAllow(defaultAllow)
+          case ("allow", ip: String) => config.allow(ip)
+          case ("deny", ip: String) => config.deny(ip)
+          case _ =>
+        })
       config
     }
     )
 
-  def confPart: Parser[Any] = commentPart | orderPart | allowOrDenyPart | emptyLine
+  def confPart: Parser[Any] = commentPart | orderPart | defaultPart | allowOrDenyPart | emptyLine
 
   def commentPart: Parser[String] = """#(.*)""".r ^^ (x => x)
 
@@ -32,9 +33,12 @@ class Conf extends JavaTokenParsers {
       "deny" ~ "," ~ "allow" ^^ (x => false)
   }
 
+  def defaultPart: Parser[Tuple2[String, Boolean]] = "default" ~ booleanValue ^^ (x => ("default", x._2))
+
+  def booleanValue: Parser[Boolean] = "true" ^^ (x => true) | "false" ^^ (x => false)
+
   def allowOrDenyPart: Parser[Tuple2[String, String]] =
-    allow ^^ (x => ("allow", x)) |
-      deny ^^ (x => ("deny", x))
+    allow ^^ (x => ("allow", x)) | deny ^^ (x => ("deny", x))
 
   def allow: Parser[String] = "allow" ~ "from" ~ ipPattern ~ opt(commentPart) ^^ (x => x._1._2)
 
@@ -49,6 +53,7 @@ class Conf extends JavaTokenParsers {
       """(\d+)(\.)(\d+)(\.)(\d+)(\.)(\d+)""".r ^^ (x => x)
 
   def emptyLine: Parser[String] = ""
+
   def eol: Parser[String] = """(\r?\n)+""".r
 }
 
@@ -62,6 +67,6 @@ class ConfParser extends Conf {
   }
 }
 
-class ConfParserException(msg:String) extends RuntimeException(msg) {
+class ConfParserException(msg: String) extends RuntimeException(msg) {
 
 }

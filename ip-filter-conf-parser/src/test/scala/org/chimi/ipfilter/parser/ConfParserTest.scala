@@ -44,6 +44,7 @@ class ConfParserTest extends FunSuite {
     assert(conf.getDenyList.size == 1)
     assert(conf.getDenyList.get(0) == "10.20.30.40")
   }
+
   test("ConfParser should ignore comment after config") {
     val confValue =
       """order deny,allow # test
@@ -80,4 +81,15 @@ class ConfParserTest extends FunSuite {
         |allow from 1.2.3.
       """.stripMargin)
   }
+
+  test("ConfParser should populate default allow value") {
+    val confValue =
+      """order deny,allow
+        |default true
+        |deny from 1.2.3.4
+      """.stripMargin
+    val conf = new ConfParser().parse(confValue)
+    assert(conf.isDefaultAllow)
+  }
+
 }
