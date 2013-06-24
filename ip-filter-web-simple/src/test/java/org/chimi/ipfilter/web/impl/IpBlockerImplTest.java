@@ -15,8 +15,8 @@ public class IpBlockerImplTest {
         IpBlockerImpl ipBlocker = new IpBlockerImpl();
         ipBlocker.init(ConfigMapUtil.getTextConfigMap());
 
-        assertTrue(ipBlocker.accept("1.2.3.4"));
-        assertFalse(ipBlocker.accept("1.2.3.5"));
+        assertTrue(ipBlocker.accept(ConfigMapUtil.ALLOW_IP));
+        assertFalse(ipBlocker.accept(ConfigMapUtil.DENY_IP));
     }
 
     @Test
@@ -28,8 +28,8 @@ public class IpBlockerImplTest {
         IpBlockerImpl ipBlocker = new IpBlockerImpl();
         ipBlocker.init(config);
 
-        assertTrue(ipBlocker.accept("1.2.3.4"));
-        assertFalse(ipBlocker.accept("1.2.3.5"));
+        assertTrue(ipBlocker.accept(ConfigMapUtil.ALLOW_IP));
+        assertFalse(ipBlocker.accept(ConfigMapUtil.DENY_IP));
     }
 
     @Test
@@ -41,7 +41,7 @@ public class IpBlockerImplTest {
         IpBlockerImpl ipBlocker = new IpBlockerImpl();
         ipBlocker.init(config);
 
-        assertTrue(ipBlocker.accept("1.2.3.4"));
-        assertFalse(ipBlocker.accept("1.2.3.5"));
+        assertTrue(ipBlocker.accept(ConfigMapUtil.ALLOW_IP));
+        assertFalse(ipBlocker.accept(ConfigMapUtil.DENY_IP));
     }
 }
