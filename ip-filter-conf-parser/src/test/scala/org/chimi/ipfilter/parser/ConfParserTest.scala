@@ -14,7 +14,7 @@ class ConfParserTest extends FunSuite {
         |deny from 10.20.30.40
         |allow from 101.102.103.*
         |allow from 201.202.203.10/64
-        """.stripMargin
+      """.stripMargin
     val conf = new ConfParser().parse(confValue)
 
     assert(!conf.isAllowFirst)
@@ -59,5 +59,25 @@ class ConfParserTest extends FunSuite {
     assert(conf.getAllowList.get(0) == "1.2.3.4")
     assert(conf.getDenyList.size == 1)
     assert(conf.getDenyList.get(0) == "10.20.30.40")
+  }
+
+  test("ConfParser should throw ConfParserExceptiopn when input invalid config string") {
+    def testConfParserExceptionThrown(confValue: String) {
+      try {
+        new ConfParser().parse(confValue)
+        fail("ConfParserException must be thrown")
+      } catch {
+        case ex: ConfParserException => // ok
+      }
+    }
+    testConfParserExceptionThrown(
+      """order deny,
+        |allow from 1.2.3.4
+      """.stripMargin)
+
+    testConfParserExceptionThrown(
+      """order deny,allow
+        |allow from 1.2.3.
+      """.stripMargin)
   }
 }

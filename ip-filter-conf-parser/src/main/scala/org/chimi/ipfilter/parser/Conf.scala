@@ -55,7 +55,13 @@ class Conf extends JavaTokenParsers {
 class ConfParser extends Conf {
   def parse(confText: String): Config = {
     val result = parseAll(conf, confText)
-    println(result)
-    result.get
+    if (result.successful)
+      result.get
+    else
+      throw new ConfParserException(result.toString)
   }
+}
+
+class ConfParserException(msg:String) extends RuntimeException(msg) {
+
 }
