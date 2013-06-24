@@ -6,40 +6,26 @@ import org.chimi.ipfilter.Config
 class Conf extends JavaTokenParsers {
   override val whiteSpace = """[ \t]+""".r
 
-  //  def conf: Parser[Config] = opt(commentList) ~ order ~ alloOrDenyList ^^ (
-  //    x => {
-  //      //val commentValueList: List[String] = x._1._1
-  //      val allowFirst: Boolean = x._1._2
-  //      val config = new Config()
-  //      config.setAllowFirst(allowFirst)
-  //
-  //      //val allowOrDenyList: List[Tuple2[String, String]] = x._2
-  //      x._2.foreach(value => value match {
-  //        case ("allow", v) => config.allow(v)
-  //        case ("deny", v) => config.deny(v)
-  //      })
-  //      config
-  //    }
-  //    )
-
   def conf: Parser[Config] = repsep(confPart, eol) ^^ (
     x => {
       val config = new Config
-      x.foreach(part => part match {
-        case comment:String =>
+      x.foreach(part =>
+        part match {
         case ("order", firstAllow:Boolean) => config.setAllowFirst(firstAllow)
         case ("allow", ip:String) => config.allow(ip)
         case ("deny", ip:String) => config.deny(ip)
+        case _ =>
       })
       config
     }
     )
 
-  def confPart: Parser[Any] = commentPart | orderPart | allowOrDenyPart
+  def confPart: Parser[Any] = commentPart | orderPart | allowOrDenyPart | emptyLine
 
   def commentPart: Parser[String] = """#(.*)""".r ^^ (x => x)
 
-  def orderPart: Parser[Tuple2[String, Boolean]] = "order" ~ orderValue ^^ (x => ("order", x._2))
+  def orderPart: Parser[Tuple2[String, Boolean]] =
+    "order" ~ orderValue ~ opt(commentPart) ^^ (x => ("order", x._1._2))
 
   def orderValue: Parser[Boolean] = {
     "allow" ~ "," ~ "deny" ^^ (x => true) |
@@ -50,9 +36,9 @@ class Conf extends JavaTokenParsers {
     allow ^^ (x => ("allow", x)) |
       deny ^^ (x => ("deny", x))
 
-  def allow: Parser[String] = "allow" ~ "from" ~ ipPattern ^^ (x => x._2)
+  def allow: Parser[String] = "allow" ~ "from" ~ ipPattern ~ opt(commentPart) ^^ (x => x._1._2)
 
-  def deny: Parser[String] = "deny" ~ "from" ~ ipPattern ^^ (x => x._2)
+  def deny: Parser[String] = "deny" ~ "from" ~ ipPattern ~ opt(commentPart) ^^ (x => x._1._2)
 
   def ipPattern: Parser[String] =
     "all" ^^ (x => "*") |
@@ -62,12 +48,14 @@ class Conf extends JavaTokenParsers {
       """(\d+)(\.)(\d+)(\.)(\d+)(\.)(\d+)(\/)(\d+)""".r ^^ (x => x) |
       """(\d+)(\.)(\d+)(\.)(\d+)(\.)(\d+)""".r ^^ (x => x)
 
+  def emptyLine: Parser[String] = ""
   def eol: Parser[String] = """(\r?\n)+""".r
 }
 
 class ConfParser extends Conf {
   def parse(confText: String): Config = {
     val result = parseAll(conf, confText)
+    println(result)
     result.get
   }
 }
