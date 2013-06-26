@@ -21,7 +21,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>**/PerfTest.java</exclude>
+                        <exclude>**/ConfigIpFilterPerfTest.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
