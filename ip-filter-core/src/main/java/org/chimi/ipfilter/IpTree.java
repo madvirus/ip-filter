@@ -15,7 +15,7 @@ public class IpTree {
         String[] ipNumbers = ip.split("\\.");
         NumberNode node = root;
         for (String number : ipNumbers) {
-            node = node.findChildNumber(number);
+            node = node.findMatchingChild(number);
             if (node == null)
                 return false;
             if (node.isAllAccept())

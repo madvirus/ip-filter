@@ -63,7 +63,7 @@ public class NumberNode {
         return childNode;
     }
 
-    public NumberNode findChildNumber(String number) {
+    public NumberNode findMatchingChild(String number) {
         NumberNode simpleChildNode = simpleChildNodeMap.get(number);
         if (simpleChildNode != null) return simpleChildNode;
 
