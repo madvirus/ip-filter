@@ -6,7 +6,7 @@
 
     <groupId>org.chimi.ipfilter</groupId>
     <artifactId>ip-filter-parent</artifactId>
-    <version>0.2</version>
+    <version>0.3-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>ip-filter</name>
     <inceptionYear>2013</inceptionYear>
