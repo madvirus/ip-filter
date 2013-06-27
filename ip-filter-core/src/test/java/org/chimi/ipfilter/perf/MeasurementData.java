@@ -12,7 +12,6 @@ public class MeasurementData {
 
     public void stop() {
         after = System.nanoTime();
-        count++;
         sum += after - before;
     }
 
@@ -21,7 +20,7 @@ public class MeasurementData {
     }
 
     public void printReport() {
-        System.out.printf("Count=%d, Sum=%d mills, Average=%.6f mills", getCount(), getSum() / 1000000, getAverage());
+        System.out.printf("Count=%d, Sum=%d mills, Average=%.6f mills\n", getCount(), getSum() / 1000000, getAverage());
     }
 
     public double getAverage() {
@@ -30,5 +29,14 @@ public class MeasurementData {
 
     public long getSum() {
         return sum;
+    }
+
+    public void add(MeasurementData data) {
+        this.count += data.count;
+        this.sum += data.sum;
+    }
+
+    public void increaseCount() {
+        count++;
     }
 }
