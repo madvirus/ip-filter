@@ -50,13 +50,17 @@ public class NumberNode {
         this.isSimpleNumber = false;
     }
 
-    public NumberNode createOrGetChildNumber(String number) {
-        if (simpleChildNodeMap.containsKey(number))
-            return simpleChildNodeMap.get(number);
+    public NumberNode createOrGetChildNumber(String numberPattern) {
+        if (simpleChildNodeMap.containsKey(numberPattern))
+            return simpleChildNodeMap.get(numberPattern);
 
-        NumberNode childNode = new NumberNode(number);
+        for (NumberNode patternChild : patternChildNodes)
+            if (patternChild.number.equals(numberPattern))
+                return patternChild;
+
+        NumberNode childNode = new NumberNode(numberPattern);
         if (childNode.isSimpleNumber)
-            simpleChildNodeMap.put(number, childNode);
+            simpleChildNodeMap.put(numberPattern, childNode);
         else
             patternChildNodes.add(childNode);
 
