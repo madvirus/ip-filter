@@ -7,22 +7,17 @@ import static org.junit.Assert.assertTrue;
 
 public class ConfigIpFilterTest {
     @Test
-    public void shouldReturnTrueToAllowedIpAndReturnFalseToDeniedIp() {
-        Config config = new Config();
-        config.setDefaultAllow(true);
-        config.setAllowFirst(true);
-        config.allow("1.2.3.4");
-        config.allow("1.2.3.5");
-        config.allow("1.2.3.64/26"); // // 01xxxxxx 범위 : 64~127
-        config.deny("5.6.7.8");
-        config.deny("101.102.103.32/27"); // 001xxxxx 범위: 32~63")
-
+    public void shouldReturnTrueToAllowedIp() {
+        Config config = IpFilterTestUtil.createConfigForAllow();
         IpFilter ipFilter = new ConfigIpFilter(config);
-        assertTrue(ipFilter.accept("1.2.3.4"));
-        assertTrue(ipFilter.accept("1.2.3.5"));
-        assertTrue(ipFilter.accept("1.2.3.64"));
-        assertTrue(ipFilter.accept("1.2.3.65"));
-        assertTrue(ipFilter.accept("1.2.3.127"));
+        IpFilterTestUtil.assertAcceptForAllow(ipFilter);
+    }
+
+    @Test
+    public void shouldReturnFalseToDeniedIp() {
+        Config config = IpFilterTestUtil.createConfigForDeny();
+        IpFilter ipFilter = new ConfigIpFilter(config);
+        IpFilterTestUtil.assertAcceptForDeny(ipFilter);
     }
 
     @Test

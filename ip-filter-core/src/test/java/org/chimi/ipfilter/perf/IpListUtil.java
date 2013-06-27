@@ -22,6 +22,16 @@ public class IpListUtil {
         return new ConfigIpFilter(config);
     }
 
+    public static ListIpFilter createListIpFilterUsingIpList() throws IOException {
+        List<String> ipConfList = IpListUtil.loadConfigIpPatternList();
+        Config config = new Config();
+        for (String ipConf : ipConfList)
+            config.deny(ipConf);
+        config.setAllowFirst(true);
+        config.setDefaultAllow(true);
+        return new ListIpFilter(config);
+    }
+
     public static List<IpIterator> randomIpIteratorList(int count) throws IOException {
         final List<String[]> ipRangeList = new ArrayList<String[]>(40000);
         template(new StringReceiver() {
