@@ -46,12 +46,16 @@ public class IpBlockFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         if (ipBlocker.accept(request.getRemoteAddr()))
-            if (checkReloadRequest((HttpServletRequest) request))
-                reloadAndResponse(request, response);
-            else
-                chain.doFilter(request, response);
+            processDoFilter(request, response, chain);
         else
-            ((HttpServletResponse) response).sendError(HttpServletResponse.SC_NOT_FOUND);
+            sendNotFoundResponse((HttpServletResponse) response);
+    }
+
+    private void processDoFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        if (checkReloadRequest((HttpServletRequest) request))
+            reloadAndResponse(request, response);
+        else
+            chain.doFilter(request, response);
     }
 
     private boolean checkReloadRequest(HttpServletRequest request) {
@@ -62,6 +66,10 @@ public class IpBlockFilter implements Filter {
 
     private void reloadAndResponse(ServletRequest request, ServletResponse response) {
         ipBlocker.reload();
+    }
+
+    private void sendNotFoundResponse(HttpServletResponse response) throws IOException {
+        response.sendError(HttpServletResponse.SC_NOT_FOUND);
     }
 
     @Override
