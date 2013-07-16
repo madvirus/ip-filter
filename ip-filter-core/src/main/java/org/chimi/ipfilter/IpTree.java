@@ -6,9 +6,8 @@ public class IpTree {
     public void add(String ip) {
         String[] ipNumbers = ip.split("\\.");
         NumberNode node = root;
-        for (String number : ipNumbers) {
+        for (String number : ipNumbers)
             node = node.createOrGetChildNumber(number);
-        }
     }
 
     public boolean containsIp(String ip) {

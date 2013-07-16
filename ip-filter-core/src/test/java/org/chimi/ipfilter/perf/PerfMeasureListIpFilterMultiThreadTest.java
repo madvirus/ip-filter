@@ -9,7 +9,7 @@ public class PerfMeasureListIpFilterMultiThreadTest {
     @Test
     public void runPerformanceMeasurement() throws IOException {
         ListIpFilter filter = IpListUtil.createListIpFilterUsingIpList();
-        MeasurementData data = new IpFilterPerfExecutor(filter).executeInMultithread(10);
+        MeasurementData data = new IpFilterPerfExecutor(filter).executeInMultithread(20);
         data.printReport();
     }
 

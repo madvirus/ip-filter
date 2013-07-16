@@ -25,13 +25,21 @@ public class ConfigIpFilter implements IpFilter {
 
     @Override
     public boolean accept(String ip) {
-        if (allowFirst) {
-            if (allowIpTree.containsIp(ip)) return true;
-            if (denyIpTree.containsIp(ip)) return false;
-        } else {
-            if (denyIpTree.containsIp(ip)) return false;
-            if (allowIpTree.containsIp(ip)) return true;
-        }
+        if (allowFirst)
+            return accepAllowFirst(ip);
+        else
+            return acceptDenyFirst(ip);
+    }
+
+    private boolean accepAllowFirst(String ip) {
+        if (allowIpTree.containsIp(ip)) return true;
+        if (denyIpTree.containsIp(ip)) return false;
+        return defaultAllow;
+    }
+
+    private boolean acceptDenyFirst(String ip) {
+        if (denyIpTree.containsIp(ip)) return false;
+        if (allowIpTree.containsIp(ip)) return true;
         return defaultAllow;
     }
 
