@@ -58,12 +58,18 @@ public class NumberNode {
     }
 
     private void processNetworkPatternNumber() {
-        int slashIdx = number.indexOf("/");
-        this.lastValueOfNetworkNumber = Integer.parseInt(number.substring(0, slashIdx));
-        int bitsOfNetworkNumber = Integer.parseInt(number.substring(slashIdx + 1));
-
+        int[] numbers = splitNumberValueBySlash();
+        this.lastValueOfNetworkNumber = numbers[0];
+        int bitsOfNetworkNumber = numbers[1];
         this.filterNumber = filterNumbers[bitsOfNetworkNumber - 24];
         this.isSimpleNumber = false;
+    }
+
+    private int[] splitNumberValueBySlash() {
+        int slashIdx = number.indexOf("/");
+        return new int[]{
+                Integer.parseInt(number.substring(0, slashIdx)),
+                Integer.parseInt(number.substring(slashIdx + 1))};
     }
 
     public NumberNode createOrGetChildNumber(String numberPattern) {
@@ -74,16 +80,6 @@ public class NumberNode {
         return createChildNodeAndGet(numberPattern);
     }
 
-    private NumberNode createChildNodeAndGet(String numberPattern) {
-        NumberNode childNode = new NumberNode(numberPattern);
-        if (childNode.isSimpleNumber)
-            simpleChildNodeMap.put(numberPattern, childNode);
-        else
-            patternChildNodes.add(childNode);
-
-        return childNode;
-    }
-
     private NumberNode findAleadyExistingChildNumber(String numberPattern) {
         if (hasSimpleChildNode(numberPattern))
             return simpleChildNodeMap.get(numberPattern);
@@ -91,25 +87,45 @@ public class NumberNode {
             return findPatternBasedChildNumberNode(numberPattern);
     }
 
-    private NumberNode findPatternBasedChildNumberNode(String numberPattern) {
-        for (NumberNode patternChild : patternChildNodes)
-            if (patternChild.number.equals(numberPattern))
-                return patternChild;
-        return null;
-    }
-
     private boolean hasSimpleChildNode(String numberPattern) {
         return simpleChildNodeMap.containsKey(numberPattern);
     }
 
-    public NumberNode findMatchingChild(String number) {
-        NumberNode simpleChildNode = simpleChildNodeMap.get(number);
-        if (simpleChildNode != null) return simpleChildNode;
+    private NumberNode createChildNodeAndGet(String numberPattern) {
+        NumberNode childNode = new NumberNode(numberPattern);
+        addChildNode(childNode);
+        return childNode;
+    }
 
+    private void addChildNode(NumberNode childNode) {
+        if (childNode.isSimpleNumber())
+            simpleChildNodeMap.put(childNode.number, childNode);
+        else
+            patternChildNodes.add(childNode);
+    }
+
+    private NumberNode findPatternBasedChildNumberNode(String numberPattern) {
+        for (NumberNode patternChild : patternChildNodes)
+            if (patternChild.numberEquals(numberPattern))
+                return patternChild;
+        return null;
+    }
+
+    private boolean numberEquals(String numberPattern) {
+        return number.equals(numberPattern);
+    }
+
+    public NumberNode findMatchingChild(String number) {
+        if (hasSimpleChildNode(number))
+            return simpleChildNodeMap.get(number);
+        else
+            return findMatchingChildInPatterns(number);
+    }
+
+    private NumberNode findMatchingChildInPatterns(String number) {
         for (NumberNode patternChildNode : patternChildNodes)
             if (patternChildNode.isMatch(number))
                 return patternChildNode;
-
         return null;
     }
 
